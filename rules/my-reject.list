@@ -1,0 +1,8 @@
+# 在这里添加需要拒绝访问的网站
+# 每行一条 Mihomo classical 规则，不要添加 YAML 的 payload: 包装。
+# DOMAIN-SUFFIX,example.com
+# DOMAIN,login.example.com
+# DOMAIN-KEYWORD,example
+
+# 保留这一条无害的占位规则，可避免空规则集在部分旧版核心中加载失败。
+DOMAIN-SUFFIX,placeholder.invalid
