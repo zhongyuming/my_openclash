@@ -8,7 +8,9 @@
 custom-openclash-rules/
 ├─ README.md
 ├─ config/
-│  └─ mihomo.yaml
+│  ├─ mihomo.yaml
+│  ├─ base.yaml
+│  └─ subconverter.ini
 └─ rules/
    ├─ my-proxy.list
    ├─ my-direct.list
@@ -19,6 +21,8 @@ custom-openclash-rules/
 文件用途：
 
 - `config/mihomo.yaml`：OpenClash/Mihomo 主配置模板，包含订阅提供器、策略组、远程规则提供器和规则顺序。
+- `config/subconverter.ini`：OpenClash“配置订阅”页面使用的远程自定义转换模板。
+- `config/base.yaml`：subconverter 生成 Mihomo 配置时使用的基础配置。
 - `rules/my-proxy.list`：交给“我的代理网站”策略组。
 - `rules/my-direct.list`：交给“我的直连网站”策略组。
 - `rules/my-ai.list`：交给“AI”策略组。
@@ -65,6 +69,28 @@ DOMAIN-KEYWORD,example
 规则按“拒绝 > 直连 > AI > 代理”的顺序匹配。同一个域名不要重复放入多个文件；如果重复，排在前面的规则生效。所有自定义规则均放在 `ChinaDomain`、`ProxyLite`、`GEOIP` 和 `MATCH` 之前，防止被大范围规则提前命中。
 
 ## 导入 OpenClash
+
+### 方式一：配置订阅自动更新（推荐）
+
+在 OpenClash 的“配置订阅”页面添加或编辑订阅：
+
+1. “订阅地址”填写机场订阅地址；不要把机场地址写入 GitHub。
+2. “订阅转换模板”选择“自定义模板”。
+3. 自定义模板地址填写：
+
+   ```text
+   https://raw.githubusercontent.com/zhongyuming/my_openclash/main/config/subconverter.ini
+   ```
+
+4. 配置文件名可填写 `my`，目标格式选择 Clash/Mihomo（Meta）。
+5. 建议把自动更新设为“每天”，选择低使用时段。
+6. 保存后点击“更新配置”，完成后切换到生成的配置并启动 OpenClash。
+
+每次配置订阅更新时，subconverter 会读取最新的 `subconverter.ini`、`base.yaml` 和四份 `rules/*.list`，重新生成完整配置。因此提交 GitHub 后，最迟会在下一次 OpenClash 配置订阅更新时生效；也可以点击“更新配置”立即拉取。
+
+> 配置订阅模式会把个人规则展开到生成配置的 `rules` 中，不依赖运行时 `rule-providers` 更新。自动更新时间由 OpenClash“配置订阅”页面控制。
+
+### 方式二：本地导入完整 Mihomo YAML
 
 1. 先把本仓库设为公开仓库，并确认四个 `raw.githubusercontent.com` 地址能直接打开纯文本内容。
 2. 下载 `config/mihomo.yaml`，替换 GitHub 用户名、仓库名。
@@ -131,6 +157,8 @@ GitHub 公开仓库中的域名列表任何人都可以查看，也可能被搜�
 ```text
 README.md
 config/mihomo.yaml
+config/base.yaml
+config/subconverter.ini
 rules/my-proxy.list
 rules/my-direct.list
 rules/my-ai.list
