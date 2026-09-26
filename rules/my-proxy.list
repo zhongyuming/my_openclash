@@ -1,6 +1,7 @@
 # 常用境外开发、知识与通讯网站。
 # 精选自 v2fly/domain-list-community；这里只保留高频核心域名，
-# 大范围覆盖仍由配置中的 geolocation-!cn/ProxyLite 负责。
+# 其他明确需要代理的域名由配置中的 GFW/GEOSITE 分类补充；
+# 未命中的网站默认直连。
 # 每行一条 Mihomo classical 规则，不要添加 YAML 的 payload: 包装。
 # DOMAIN-SUFFIX,example.com
 # DOMAIN,login.example.com

@@ -66,17 +66,17 @@ DOMAIN-KEYWORD,example
 
 当前仍为空的直连和拒绝列表保留了 `DOMAIN-SUFFIX,placeholder.invalid`。这是无害的保留域名占位规则，用来避免某些旧版核心拒绝加载完全空白的规则集；添加真实规则后可以保留，也可以删除。
 
-规则按“拒绝 > 直连 > AI > 代理”的顺序匹配。同一个域名不要重复放入多个文件；如果重复，排在前面的规则生效。所有自定义规则均放在 `ChinaDomain`、`ProxyLite`、`GEOIP` 和 `MATCH` 之前，防止被大范围规则提前命中。
+规则按“拒绝 > 直连 > AI > 代理”的顺序匹配。同一个域名不要重复放入多个文件；如果重复，排在前面的规则生效。所有自定义规则均放在 `ChinaDomain`、`GEOIP` 和 `MATCH` 之前，防止被大范围规则提前命中。
 
 ## 公共境外数据库
 
-配置采用“个人规则优先、公共分类补充、大范围规则兜底”的三层结构：
+配置采用“默认直连、命中规则才分流”的黑名单模式：
 
 1. `rules/*.list`：你可以直接维护的高优先级规则；其中代理和 AI 列表预置了一组常用核心域名。
 2. Mihomo GEOSITE：使用 `gfw`、`category-scholar-!cn`、`category-social-media-!cn`、`category-browser-!cn`、`category-anticensorship` 和 `category-vpnservices` 等精确分类。
-3. `geolocation-!cn`/`ProxyLite`：负责未被前两层命中的境外域名兜底。
+3. 中国域名和中国 IP 明确直连，最终 `MATCH/FINAL` 也是 `DIRECT`。未列入任何规则的境外网站同样直连；若需要代理，将域名加入 `my-proxy.list`。
 
-GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community)，Mihomo 数据由 [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) 提供。没有直接引入 blackmatrix7 的完整 Global 列表，因为它规模较大且与现有 geolocation/ProxyLite 数据高度重复；在 R2S 上使用分类数据库和 MRS/GEOSITE 更节省配置体积。
+GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community)，Mihomo 数据由 [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) 提供。没有直接引入 blackmatrix7 的完整 Global 列表，因为它规模较大，而且会让大量未明确指定的网站自动走代理；在 R2S 上使用精确分类更符合按需分流模式。
 
 ## 导入 OpenClash
 
@@ -140,7 +140,7 @@ OpenClash 可能接管或改写端口、DNS、控制器地址及 provider 本地
 5. OpenClash 日志中是否出现超时、TLS、路径权限、`format: text` 或规则解析错误。
 6. Mihomo 核心是否足够新；`classical + text` 必须显式配置 `format: text`。
 7. 如果只有 `raw.githubusercontent.com` 无法访问，可检查 OpenClash 的 GitHub 地址修改/CDN 设置；修改后再次刷新 provider。
-8. `ChinaDomain` 和 `ProxyLite` 来自 MetaCubeX。若自定义规则正常而这两个 provider 失败，重点检查 MetaCubeX URL、MRS 支持和核心版本。
+8. `ChinaDomain` 来自 MetaCubeX。若自定义规则正常而它加载失败，重点检查 MetaCubeX URL、MRS 支持和核心版本。
 
 ## 隐私与公开仓库提醒
 
@@ -151,7 +151,7 @@ GitHub 公开仓库中的域名列表任何人都可以查看，也可能被搜�
 ## 依赖与兼容性说明
 
 - 四份个人规则完全由本仓库维护。
-- 大范围规则只保留两个 MetaCubeX MRS provider：`ChinaDomain`（中国域名）和 `ProxyLite`（非中国域名），以减少第三方远程依赖。
+- 大范围规则只保留一个 MetaCubeX MRS provider：`ChinaDomain`（中国域名）。不加载 `ProxyLite/geolocation-!cn`，避免所有境外域名自动走代理。
 - Microsoft、Netflix、Telegram、AI 和游戏使用 Mihomo 内置 `GEOSITE` 数据；`GEOIP` 只用于 `private` 和 `CN`。
 - `category-ai-!cn`、`category-games@cn` 等 GEOSITE 标签依赖当前 Mihomo geodata。若所用 OpenClash/Mihomo 版本的数据集不包含某标签，需升级 geodata/核心，或删除对应规则后改用自己的 classical 规则。
 - 部分机场节点名称不含国家/地区关键词，会被地区正则漏掉；这属于节点命名兼容性问题，可按机场实际节点名调整 `filter`。

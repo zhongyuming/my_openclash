@@ -286,7 +286,7 @@ rule-providers:
     path: ./rule_provider/MyReject.list
     interval: 86400
 
-  # 仅保留两个大范围第三方规则集，降低远程依赖数量。
+  # 中国域名规则用于明确直连；未命中的流量最终也会直连。
   ChinaDomain:
     type: http
     behavior: domain
@@ -295,17 +295,9 @@ rule-providers:
     path: ./rule_provider/ChinaDomain.mrs
     interval: 86400
 
-  ProxyLite:
-    type: http
-    behavior: domain
-    format: mrs
-    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"
-    path: ./rule_provider/ProxyLite.mrs
-    interval: 86400
-
 rules:
   # 私有规则优先：拒绝 > 直连 > AI > 代理。
-  # 必须位于 ChinaDomain、ProxyLite、GEOIP 和 MATCH 之前。
+  # 必须位于 ChinaDomain、GEOIP 和 MATCH 之前。
   - RULE-SET,MyReject,我的拒绝网站
   - RULE-SET,MyDirect,我的直连网站
   - RULE-SET,MyAI,AI
@@ -320,7 +312,7 @@ rules:
   - GEOSITE,category-games@cn,DIRECT
   - GEOSITE,category-games,游戏
 
-  # 公共境外数据库的精确分类，位于中国域名和全局兜底之前。
+  # 公共境外数据库的精确分类；只有这些明确分类才走代理。
   - GEOSITE,gfw,主代理
   - GEOSITE,category-scholar-!cn,主代理
   - GEOSITE,category-social-media-!cn,主代理
@@ -328,9 +320,8 @@ rules:
   - GEOSITE,category-anticensorship,主代理
   - GEOSITE,category-vpnservices,主代理
 
-  # 大范围规则放在私有规则之后。
+  # 国内明确直连；其他未命中流量默认直连。
   - RULE-SET,ChinaDomain,DIRECT
-  - RULE-SET,ProxyLite,主代理
   - GEOIP,private,DIRECT,no-resolve
   - GEOIP,CN,DIRECT,no-resolve
-  - MATCH,主代理
+  - MATCH,DIRECT
