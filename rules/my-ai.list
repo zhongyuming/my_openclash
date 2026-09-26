@@ -1,8 +1,50 @@
-# 在这里添加需要交给 AI 策略组的网站
+# 常用境外 AI 服务核心域名。
+# 精选自 v2fly/domain-list-community 的 AI 分类；完整覆盖仍由
+# GEOSITE,category-ai-!cn 提供。
 # 每行一条 Mihomo classical 规则，不要添加 YAML 的 payload: 包装。
 # DOMAIN-SUFFIX,example.com
 # DOMAIN,login.example.com
 # DOMAIN-KEYWORD,example
 
-# 保留这一条无害的占位规则，可避免空规则集在部分旧版核心中加载失败。
-DOMAIN-SUFFIX,placeholder.invalid
+# OpenAI / ChatGPT / Sora
+DOMAIN-SUFFIX,chat.com
+DOMAIN-SUFFIX,chatgpt.com
+DOMAIN-SUFFIX,chatgpt.site
+DOMAIN-SUFFIX,oaistatic.com
+DOMAIN-SUFFIX,oaistatsig.com
+DOMAIN-SUFFIX,oaiusercontent.com
+DOMAIN-SUFFIX,openai.com
+DOMAIN-SUFFIX,sora.com
+DOMAIN-SUFFIX,livekit.cloud
+
+# Anthropic / Claude
+DOMAIN-SUFFIX,anthropic.com
+DOMAIN-SUFFIX,clau.de
+DOMAIN-SUFFIX,claude.ai
+DOMAIN-SUFFIX,claude.com
+DOMAIN-SUFFIX,claudemcpclient.com
+DOMAIN-SUFFIX,claudemcpcontent.com
+DOMAIN-SUFFIX,claudeusercontent.com
+
+# Google Gemini / AI Studio / NotebookLM
+DOMAIN-SUFFIX,deepmind.com
+DOMAIN-SUFFIX,deepmind.google
+DOMAIN-SUFFIX,generativeai.google
+DOMAIN-SUFFIX,gemini.google
+DOMAIN-SUFFIX,notebooklm.google
+DOMAIN,ai.google.dev
+DOMAIN,aistudio.google.com
+DOMAIN,gemini.google.com
+DOMAIN,generativelanguage.googleapis.com
+
+# 其他常用 AI 平台
+DOMAIN-SUFFIX,perplexity.ai
+DOMAIN-SUFFIX,perplexity.com
+DOMAIN-SUFFIX,pplx.ai
+DOMAIN-SUFFIX,hf.co
+DOMAIN-SUFFIX,hf.space
+DOMAIN-SUFFIX,huggingface.co
+DOMAIN-SUFFIX,mistral.ai
+DOMAIN-SUFFIX,midjourney.com
+DOMAIN-SUFFIX,poe.com
+DOMAIN-SUFFIX,openrouter.ai

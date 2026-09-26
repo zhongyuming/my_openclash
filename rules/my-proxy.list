@@ -1,8 +1,39 @@
-# 在这里添加需要走代理的网站
+# 常用境外开发、知识与通讯网站。
+# 精选自 v2fly/domain-list-community；这里只保留高频核心域名，
+# 大范围覆盖仍由配置中的 geolocation-!cn/ProxyLite 负责。
 # 每行一条 Mihomo classical 规则，不要添加 YAML 的 payload: 包装。
 # DOMAIN-SUFFIX,example.com
 # DOMAIN,login.example.com
 # DOMAIN-KEYWORD,example
 
-# 保留这一条无害的占位规则，可避免空规则集在部分旧版核心中加载失败。
-DOMAIN-SUFFIX,placeholder.invalid
+# GitHub 与开发协作
+DOMAIN-SUFFIX,github.com
+DOMAIN-SUFFIX,github.dev
+DOMAIN-SUFFIX,github.io
+DOMAIN-SUFFIX,githubassets.com
+DOMAIN-SUFFIX,githubusercontent.com
+DOMAIN-SUFFIX,githubstatus.com
+DOMAIN-SUFFIX,ghcr.io
+DOMAIN-SUFFIX,npmjs.com
+DOMAIN-SUFFIX,npmjs.org
+DOMAIN-SUFFIX,stackoverflow.com
+DOMAIN-SUFFIX,stackexchange.com
+
+# Wikimedia、社区与内容平台
+DOMAIN-SUFFIX,wikipedia.org
+DOMAIN-SUFFIX,wikimedia.org
+DOMAIN-SUFFIX,wikidata.org
+DOMAIN-SUFFIX,medium.com
+DOMAIN-SUFFIX,reddit.com
+DOMAIN-SUFFIX,redd.it
+DOMAIN-SUFFIX,redditmedia.com
+DOMAIN-SUFFIX,redditstatic.com
+
+# Discord
+DOMAIN-SUFFIX,discord.com
+DOMAIN-SUFFIX,discord.co
+DOMAIN-SUFFIX,discord.gg
+DOMAIN-SUFFIX,discord.media
+DOMAIN-SUFFIX,discordapp.com
+DOMAIN-SUFFIX,discordapp.net
+DOMAIN-SUFFIX,discordcdn.com

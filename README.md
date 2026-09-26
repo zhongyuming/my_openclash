@@ -64,9 +64,19 @@ DOMAIN-KEYWORD,example
 - AI 服务：`rules/my-ai.list`
 - 需要拒绝：`rules/my-reject.list`
 
-文件中的 `DOMAIN-SUFFIX,placeholder.invalid` 是无害的保留域名占位规则，用来避免某些旧版核心拒绝加载完全空白的规则集。添加真实规则后可以保留，也可以删除。
+当前仍为空的直连和拒绝列表保留了 `DOMAIN-SUFFIX,placeholder.invalid`。这是无害的保留域名占位规则，用来避免某些旧版核心拒绝加载完全空白的规则集；添加真实规则后可以保留，也可以删除。
 
 规则按“拒绝 > 直连 > AI > 代理”的顺序匹配。同一个域名不要重复放入多个文件；如果重复，排在前面的规则生效。所有自定义规则均放在 `ChinaDomain`、`ProxyLite`、`GEOIP` 和 `MATCH` 之前，防止被大范围规则提前命中。
+
+## 公共境外数据库
+
+配置采用“个人规则优先、公共分类补充、大范围规则兜底”的三层结构：
+
+1. `rules/*.list`：你可以直接维护的高优先级规则；其中代理和 AI 列表预置了一组常用核心域名。
+2. Mihomo GEOSITE：使用 `gfw`、`category-scholar-!cn`、`category-social-media-!cn`、`category-browser-!cn`、`category-anticensorship` 和 `category-vpnservices` 等精确分类。
+3. `geolocation-!cn`/`ProxyLite`：负责未被前两层命中的境外域名兜底。
+
+GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community)，Mihomo 数据由 [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) 提供。没有直接引入 blackmatrix7 的完整 Global 列表，因为它规模较大且与现有 geolocation/ProxyLite 数据高度重复；在 R2S 上使用分类数据库和 MRS/GEOSITE 更节省配置体积。
 
 ## 导入 OpenClash
 

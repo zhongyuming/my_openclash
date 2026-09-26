@@ -320,6 +320,14 @@ rules:
   - GEOSITE,category-games@cn,DIRECT
   - GEOSITE,category-games,游戏
 
+  # 公共境外数据库的精确分类，位于中国域名和全局兜底之前。
+  - GEOSITE,gfw,主代理
+  - GEOSITE,category-scholar-!cn,主代理
+  - GEOSITE,category-social-media-!cn,主代理
+  - GEOSITE,category-browser-!cn,主代理
+  - GEOSITE,category-anticensorship,主代理
+  - GEOSITE,category-vpnservices,主代理
+
   # 大范围规则放在私有规则之后。
   - RULE-SET,ChinaDomain,DIRECT
   - RULE-SET,ProxyLite,主代理
