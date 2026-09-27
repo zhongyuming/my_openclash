@@ -259,6 +259,7 @@ rule-providers:
     behavior: classical
     format: text
     url: "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_GITHUB_REPOSITORY/main/rules/my-proxy.list"
+    proxy: 主代理
     path: ./rule_provider/MyProxy.list
     interval: 86400
 
@@ -267,6 +268,7 @@ rule-providers:
     behavior: classical
     format: text
     url: "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_GITHUB_REPOSITORY/main/rules/my-direct.list"
+    proxy: 主代理
     path: ./rule_provider/MyDirect.list
     interval: 86400
 
@@ -275,6 +277,7 @@ rule-providers:
     behavior: classical
     format: text
     url: "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_GITHUB_REPOSITORY/main/rules/my-ai.list"
+    proxy: 主代理
     path: ./rule_provider/MyAI.list
     interval: 86400
 
@@ -283,6 +286,7 @@ rule-providers:
     behavior: classical
     format: text
     url: "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_GITHUB_REPOSITORY/main/rules/my-reject.list"
+    proxy: 主代理
     path: ./rule_provider/MyReject.list
     interval: 86400
 

@@ -99,6 +99,8 @@ GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fl
 
 首次更新配置订阅时，subconverter 会读取 `subconverter.ini` 和 `base.yaml`，生成四个 `RULE-SET` 引用。之后四份 `rules/*.list` 由路由器上的 Mihomo 直接下载，不再依赖第三方转换服务器缓存。
 
+四个个人 Rule Provider 均设置了 `proxy: 主代理`，规则更新通过代理下载 GitHub Raw。建议关闭 OpenClash 的“GitHub 地址修改”，避免 Raw 地址被改写成可能存在旧缓存的 jsDelivr 地址；临时更新失败时，Mihomo 会继续使用已经下载到路由器的本地规则文件。
+
 > 首次应用这套新模板后，应在 Dashboard 的规则提供器页面看到 `MyProxy`、`MyDirect`、`MyAI`、`MyReject`。
 
 ### 方式二：本地导入完整 Mihomo YAML
