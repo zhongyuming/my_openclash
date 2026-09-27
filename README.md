@@ -89,15 +89,13 @@ GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fl
 3. 自定义模板地址填写：
 
    ```text
-   https://raw.githubusercontent.com/zhongyuming/my_openclash/main/config/subconverter.ini?v=2
+   https://raw.githubusercontent.com/zhongyuming/my_openclash/main/config/subconverter.ini
    ```
 
 4. 配置文件名可填写 `my`，目标格式选择 Clash/Mihomo（Meta）。
 5. 建议把自动更新设为“每天”，选择低使用时段。
 6. 将 OpenClash 的“使用规则集”设为“启用”，否则 `MyProxy` 等 Rule Provider 可能不会被加载。
 7. 保存后点击“更新配置”，完成后切换到生成的配置并启动 OpenClash。
-
-URL 末尾的 `?v=2` 用于绕过转换服务器此前缓存的旧模板。以后只修改 `rules/*.list` 时不需要改这个版本号。
 
 首次更新配置订阅时，subconverter 会读取 `subconverter.ini` 和 `base.yaml`，生成四个 `RULE-SET` 引用。之后四份 `rules/*.list` 由路由器上的 Mihomo 直接下载，不再依赖第三方转换服务器缓存。
 
