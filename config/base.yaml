@@ -43,6 +43,40 @@ dns:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
 
+# 个人规则由 Mihomo 直接从本仓库下载，避免受 subconverter 远程缓存影响。
+rule-providers:
+  MyProxy:
+    type: http
+    behavior: classical
+    format: text
+    url: "https://raw.githubusercontent.com/zhongyuming/my_openclash/main/rules/my-proxy.list"
+    path: ./rule_provider/MyProxy.list
+    interval: 86400
+
+  MyDirect:
+    type: http
+    behavior: classical
+    format: text
+    url: "https://raw.githubusercontent.com/zhongyuming/my_openclash/main/rules/my-direct.list"
+    path: ./rule_provider/MyDirect.list
+    interval: 86400
+
+  MyAI:
+    type: http
+    behavior: classical
+    format: text
+    url: "https://raw.githubusercontent.com/zhongyuming/my_openclash/main/rules/my-ai.list"
+    path: ./rule_provider/MyAI.list
+    interval: 86400
+
+  MyReject:
+    type: http
+    behavior: classical
+    format: text
+    url: "https://raw.githubusercontent.com/zhongyuming/my_openclash/main/rules/my-reject.list"
+    path: ./rule_provider/MyReject.list
+    interval: 86400
+
 proxies: []
 proxy-groups: []
 rules: []
