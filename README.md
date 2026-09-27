@@ -1,6 +1,6 @@
 # OpenClash + Mihomo 自定义规则
 
-这是一套适合长期维护的 OpenClash + Mihomo 配置模板。个人域名分别保存在 `rules/*.list` 中；公开到 GitHub 后，Mihomo 会通过 `rule-providers` 每 86400 秒（24 小时）检查一次更新。以后通常只需要修改规则文件，无需反复编辑整份配置。
+这是一套适合长期维护的 OpenClash + Mihomo 配置模板。个人域名分别保存在 `rules/*.list` 中；配置订阅模式会在每次生成配置时拉取最新规则，完整 YAML 模式则由 Mihomo `rule-providers` 每 86400 秒检查更新。以后通常只需要修改规则文件，无需反复编辑整份配置。
 
 ## 目录结构
 
@@ -108,25 +108,29 @@ GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fl
 4. 在 OpenClash 的“配置文件订阅/配置文件管理”页面上传本地 YAML；不同 OpenClash 版本菜单名称可能略有差异。
 5. 也可以通过 SSH 把文件放到 `/etc/openclash/config/mihomo.yaml`，然后在 OpenClash 中选择并启用该配置。
 6. 运行模式选择规则模式，核心选择 Mihomo/Meta 内核，保存并启动 OpenClash。
-7. 首次启动后检查“代理集”和“规则集”页面，确认机场订阅和六个远程规则提供器都已成功加载。
+7. 首次启动后检查“代理集”和“规则集”页面，确认机场订阅和五个远程规则提供器都已成功加载。
 
 OpenClash 可能接管或改写端口、DNS、控制器地址及 provider 本地路径；最终生效内容应以 OpenClash 运行时配置为准。
 
 ## 更新规则
 
-正常自动更新流程：
+配置订阅模式（推荐）的更新流程：
 
 1. 修改相应的 `rules/*.list`。
 2. 提交并推送到 GitHub 的 `main` 分支。
-3. 等待 Mihomo 的 86400 秒更新周期，或在 OpenClash 面板中手动刷新规则提供器。
+3. 等待 OpenClash 的下一次配置订阅更新，或在“配置订阅”页面点击“更新配置”。
+4. 确认更新后的配置仍是当前启用配置；必要时点击“切换”或重启 OpenClash。
 
-手动更新通常可在 OpenClash Dashboard 的 Rules/规则提供器页面点击对应 provider 的刷新按钮。若当前版本没有刷新入口，可重启 OpenClash触发加载。仍使用旧缓存时，先备份配置，再从 OpenClash 的规则集文件管理页面删除对应缓存文件并重启；不要误删整个 `/etc/openclash` 目录。
+`subconverter.ini` 已启用 `update_ruleset_on_request=true`，每次转换请求都会重新读取远程规则，避免使用旧的 subconverter 规则缓存。配置订阅模式会把个人规则展开到生成配置的 `rules` 数组中，因此不应只刷新 Dashboard 的 Rule Provider。
+
+如果使用本地导入的完整 `mihomo.yaml`，四个 Rule Provider 会按 86400 秒周期更新，也可以在 Dashboard 的 Rules/规则提供器页面手动刷新。
 
 ## 查看规则是否命中
 
 - 在 OpenClash Dashboard 的 Connections/连接页面查看目标域名、命中的规则和最终策略组。
 - 把 OpenClash 日志级别临时调为 `debug`，访问目标网站后搜索域名、`RULE-SET` 名称或策略组名称。
-- 在 Rules/规则页面确认 `MyProxy`、`MyDirect`、`MyAI`、`MyReject` 已加载且规则数量符合预期。
+- 配置订阅模式可通过 SSH 搜索源配置和运行时配置：`grep -n "example.com" /etc/openclash/config/my.yaml /etc/openclash/my.yaml`。能搜到说明转换后的配置已经包含该规则。
+- 完整 YAML 模式可在 Rules/规则页面确认 `MyProxy`、`MyDirect`、`MyAI`、`MyReject` 已加载且规则数量符合预期。
 - 测试结束后把日志级别改回 `info`，减少 R2S 的日志和存储开销。
 
 ## 外部规则下载失败排查
