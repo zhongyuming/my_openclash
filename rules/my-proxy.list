@@ -38,3 +38,7 @@ DOMAIN-SUFFIX,discord.media
 DOMAIN-SUFFIX,discordapp.com
 DOMAIN-SUFFIX,discordapp.net
 DOMAIN-SUFFIX,discordcdn.com
+
+#hs
+DOMAIN-SUFFIX,missav.live
+DOMAIN-SUFFIX,myavlive.live
