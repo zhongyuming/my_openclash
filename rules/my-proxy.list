@@ -31,7 +31,7 @@ DOMAIN-SUFFIX,redditmedia.com
 DOMAIN-SUFFIX,redditstatic.com
 
 # Discord
-DOMAIN-SUFFIX,discord.com
+# DOMAIN-SUFFIX,discord.com
 DOMAIN-SUFFIX,discord.co
 DOMAIN-SUFFIX,discord.gg
 DOMAIN-SUFFIX,discord.media
