@@ -290,6 +290,15 @@ rule-providers:
     path: ./rule_provider/MyReject.list
     interval: 86400
 
+  TelegramIP:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+    proxy: 主代理
+    path: ./rule_provider/TelegramIP.mrs
+    interval: 86400
+
   # 中国域名规则用于明确直连；未命中的流量最终也会直连。
   ChinaDomain:
     type: http
@@ -313,6 +322,7 @@ rules:
   - GEOSITE,microsoft,微软
   - GEOSITE,netflix,Netflix
   - GEOSITE,telegram,Telegram
+  - RULE-SET,TelegramIP,Telegram
   - GEOSITE,category-games@cn,DIRECT
   - GEOSITE,category-games,游戏
 

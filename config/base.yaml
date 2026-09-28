@@ -81,6 +81,16 @@ rule-providers:
     path: ./rule_provider/MyReject.list
     interval: 86400
 
+  # Telegram 直连 IP 规则；单独使用 MetaCubeX 的 IP CIDR MRS 数据。
+  TelegramIP:
+    type: http
+    behavior: ipcidr
+    format: mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+    proxy: 主代理
+    path: ./rule_provider/TelegramIP.mrs
+    interval: 86400
+
 proxies: []
 proxy-groups: []
 rules: []

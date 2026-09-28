@@ -97,11 +97,11 @@ GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fl
 6. 将 OpenClash 的“使用规则集”设为“启用”，否则 `MyProxy` 等 Rule Provider 可能不会被加载。
 7. 保存后点击“更新配置”，完成后切换到生成的配置并启动 OpenClash。
 
-首次更新配置订阅时，subconverter 会读取 `subconverter.ini` 和 `base.yaml`，生成四个 `RULE-SET` 引用。之后四份 `rules/*.list` 由路由器上的 Mihomo 直接下载，不再依赖第三方转换服务器缓存。
+首次更新配置订阅时，subconverter 会读取 `subconverter.ini` 和 `base.yaml`，生成个人规则和 Telegram IP 规则的 `RULE-SET` 引用。之后个人 `rules/*.list` 与 Telegram IP 数据由路由器上的 Mihomo 直接下载，不再依赖第三方转换服务器缓存。
 
 四个个人 Rule Provider 均设置了 `proxy: 主代理`，规则更新通过代理下载 GitHub Raw。建议关闭 OpenClash 的“GitHub 地址修改”，避免 Raw 地址被改写成可能存在旧缓存的 jsDelivr 地址；临时更新失败时，Mihomo 会继续使用已经下载到路由器的本地规则文件。
 
-> 首次应用这套新模板后，应在 Dashboard 的规则提供器页面看到 `MyProxy`、`MyDirect`、`MyAI`、`MyReject`。
+> 首次应用这套新模板后，应在 Dashboard 的规则提供器页面看到 `MyProxy`、`MyDirect`、`MyAI`、`MyReject` 和 `TelegramIP`。
 
 ### 方式二：本地导入完整 Mihomo YAML
 
@@ -111,7 +111,7 @@ GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fl
 4. 在 OpenClash 的“配置文件订阅/配置文件管理”页面上传本地 YAML；不同 OpenClash 版本菜单名称可能略有差异。
 5. 也可以通过 SSH 把文件放到 `/etc/openclash/config/mihomo.yaml`，然后在 OpenClash 中选择并启用该配置。
 6. 运行模式选择规则模式，核心选择 Mihomo/Meta 内核，保存并启动 OpenClash。
-7. 首次启动后检查“代理集”和“规则集”页面，确认机场订阅和五个远程规则提供器都已成功加载。
+7. 首次启动后检查“代理集”和“规则集”页面，确认机场订阅和六个远程规则提供器都已成功加载。
 
 OpenClash 可能接管或改写端口、DNS、控制器地址及 provider 本地路径；最终生效内容应以 OpenClash 运行时配置为准。
 
@@ -130,8 +130,8 @@ OpenClash 可能接管或改写端口、DNS、控制器地址及 provider 本地
 
 - 在 OpenClash Dashboard 的 Connections/连接页面查看目标域名、命中的规则和最终策略组。
 - 把 OpenClash 日志级别临时调为 `debug`，访问目标网站后搜索域名、`RULE-SET` 名称或策略组名称。
-- 在 Rules/规则提供器页面确认 `MyProxy`、`MyDirect`、`MyAI`、`MyReject` 已加载，更新时间和规则数量符合预期。
-- 可通过 SSH 检查生成配置是否包含 provider 和引用：`grep -nE 'MyProxy|RULE-SET' /etc/openclash/config/my.yaml /etc/openclash/my.yaml 2>/dev/null`。
+- 在 Rules/规则提供器页面确认 `MyProxy`、`MyDirect`、`MyAI`、`MyReject`、`TelegramIP` 已加载，更新时间和规则数量符合预期。
+- 可通过 SSH 检查生成配置是否包含 provider 和引用：`grep -nE 'MyProxy|TelegramIP|RULE-SET' /etc/openclash/config/my.yaml /etc/openclash/my.yaml 2>/dev/null`。
 - 可检查本地缓存是否含目标域名：`grep -R -n "example.com" /etc/openclash/rule_provider 2>/dev/null`。
 - 测试结束后把日志级别改回 `info`，减少 R2S 的日志和存储开销。
 
@@ -146,7 +146,7 @@ OpenClash 可能接管或改写端口、DNS、控制器地址及 provider 本地
 5. OpenClash 日志中是否出现超时、TLS、路径权限、`format: text` 或规则解析错误。
 6. Mihomo 核心是否足够新；`classical + text` 必须显式配置 `format: text`。
 7. 如果只有 `raw.githubusercontent.com` 无法访问，可检查 OpenClash 的 GitHub 地址修改/CDN 设置；修改后再次刷新 provider。
-8. `ChinaDomain` 来自 MetaCubeX。若自定义规则正常而它加载失败，重点检查 MetaCubeX URL、MRS 支持和核心版本。
+8. `ChinaDomain` 和 `TelegramIP` 来自 MetaCubeX。若自定义规则正常而它们加载失败，重点检查 MetaCubeX URL、MRS 支持和核心版本。
 
 ## 隐私与公开仓库提醒
 
@@ -157,8 +157,8 @@ GitHub 公开仓库中的域名列表任何人都可以查看，也可能被搜�
 ## 依赖与兼容性说明
 
 - 四份个人规则完全由本仓库维护。
-- 大范围规则只保留一个 MetaCubeX MRS provider：`ChinaDomain`（中国域名）。不加载 `ProxyLite/geolocation-!cn`，避免所有境外域名自动走代理。
-- Microsoft、Netflix、Telegram、AI 和游戏使用 Mihomo 内置 `GEOSITE` 数据；`GEOIP` 只用于 `private` 和 `CN`。
+- 大范围规则只保留一个 MetaCubeX MRS provider：`ChinaDomain`（中国域名）；另有一个 Telegram 专用 IP CIDR provider：`TelegramIP`。不加载 `ProxyLite/geolocation-!cn`，避免所有境外域名自动走代理。
+- Microsoft、Netflix、Telegram 域名、AI 和游戏使用 Mihomo 内置 `GEOSITE` 数据；Telegram IP 由 `TelegramIP` 覆盖。`GEOIP` 只用于 `private` 和 `CN`。
 - `category-ai-!cn`、`category-games@cn` 等 GEOSITE 标签依赖当前 Mihomo geodata。若所用 OpenClash/Mihomo 版本的数据集不包含某标签，需升级 geodata/核心，或删除对应规则后改用自己的 classical 规则。
 - 部分机场节点名称不含国家/地区关键词，会被地区正则漏掉；这属于节点命名兼容性问题，可按机场实际节点名调整 `filter`。
 - 如果某地区没有匹配节点，相关自动/手动组可能为空。可修改正则，或从上层策略组中暂时移除该地区组。
