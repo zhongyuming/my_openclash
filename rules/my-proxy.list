@@ -41,5 +41,6 @@ DOMAIN-SUFFIX,discordcdn.com
 
 #hs
 DOMAIN-SUFFIX,missav.live
+DOMAIN,client-rapi-missav.recombee.com
 DOMAIN-SUFFIX,myavlive.com
 DOMAIN-SUFFIX,koyso.com
