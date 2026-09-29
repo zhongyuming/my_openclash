@@ -20,6 +20,7 @@ DOMAIN-SUFFIX,npmjs.org
 DOMAIN-SUFFIX,stackoverflow.com
 DOMAIN-SUFFIX,stackexchange.com
 
+
 # Wikimedia、社区与内容平台
 DOMAIN-SUFFIX,wikipedia.org
 DOMAIN-SUFFIX,wikimedia.org
@@ -30,8 +31,9 @@ DOMAIN-SUFFIX,redd.it
 DOMAIN-SUFFIX,redditmedia.com
 DOMAIN-SUFFIX,redditstatic.com
 
+
 # Discord
-# DOMAIN-SUFFIX,discord.com
+DOMAIN-SUFFIX,discord.com
 DOMAIN-SUFFIX,discord.co
 DOMAIN-SUFFIX,discord.gg
 DOMAIN-SUFFIX,discord.media
@@ -39,8 +41,12 @@ DOMAIN-SUFFIX,discordapp.com
 DOMAIN-SUFFIX,discordapp.net
 DOMAIN-SUFFIX,discordcdn.com
 
+
 #hs
+#miss
 DOMAIN-SUFFIX,missav.live
-DOMAIN,client-rapi-missav.recombee.com
+DOMAIN-SUFFIX,client-rapi-missav.recombee.com
+DOMAIN-SUFFIX,fourhoi.com
+
 DOMAIN-SUFFIX,myavlive.com
 DOMAIN-SUFFIX,koyso.com
