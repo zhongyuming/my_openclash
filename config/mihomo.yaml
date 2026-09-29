@@ -109,6 +109,17 @@ proxy-groups:
       - 新加坡自动
       - 美国自动
 
+  - name: YouTube
+    type: select
+    proxies:
+      - 主代理
+      - 美国自动
+      - 日本自动
+      - 新加坡自动
+      - 香港自动
+      - 台湾自动
+      - DIRECT
+
   - name: Telegram
     type: select
     proxies:
@@ -325,6 +336,7 @@ rules:
   - RULE-SET,TelegramIP,Telegram
   - GEOSITE,category-games@cn,DIRECT
   - GEOSITE,category-games,游戏
+  - GEOSITE,youtube,YouTube
 
   # 公共境外数据库的精确分类；只有这些明确分类才走代理。
   - GEOSITE,gfw,主代理
