@@ -53,3 +53,6 @@ DOMAIN-SUFFIX,media-hls.doppiocdn.org
 
 DOMAIN-SUFFIX,myavlive.com
 DOMAIN-SUFFIX,koyso.com
+
+#blu-ray
+DOMAIN-SUFFIX,blu-ray.com
