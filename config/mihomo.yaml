@@ -129,6 +129,24 @@ proxy-groups:
       - 日本自动
       - 美国自动
 
+  - name: Steam
+    type: select
+    proxies:
+      - DIRECT
+      - 主代理
+      - 香港自动
+      - 台湾自动
+      - 日本自动
+      - 韩国自动
+      - 新加坡自动
+      - 美国自动
+      - 香港手动
+      - 台湾手动
+      - 日本手动
+      - 韩国手动
+      - 新加坡手动
+      - 美国手动
+
   - name: 游戏
     type: select
     proxies:
@@ -329,6 +347,8 @@ rules:
 
   # 内置 geosite 服务规则；不使用 GEOIP,Netflix/GitHub 等服务名。
   - GEOSITE,private,DIRECT
+  # Steam 优先于微软、国内游戏和通用游戏分类，包含商店、社区和已收录的下载域名。
+  - GEOSITE,steam,Steam
   - GEOSITE,category-ai-!cn,AI
   - GEOSITE,microsoft,微软
   - GEOSITE,netflix,Netflix

@@ -78,6 +78,14 @@ DOMAIN-KEYWORD,example
 
 GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community)，Mihomo 数据由 [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) 提供。没有直接引入 blackmatrix7 的完整 Global 列表，因为它规模较大，而且会让大量未明确指定的网站自动走代理；在 R2S 上使用精确分类更符合按需分流模式。
 
+## Steam 独立策略组
+
+Steam 使用独立的 `select` 策略组，默认选择 `DIRECT`，也可以选择“主代理”、六个地区的自动组或手动节点组。选择某地区手动组后，再进入该组选择具体节点。
+
+`GEOSITE,steam,Steam` 覆盖当前 geodata 已收录的 Steam 商店、社区、内容分发和下载域名，放在微软、国内游戏、通用游戏及中国域名等规则之前。个人 `rules/*.list` 仍拥有更高优先级；Steam 域名若已写入个人规则，会先执行个人规则。使用相同的 Steam/CDN 域名时，下载也会跟随该组选择；其他游戏独立的服务器 IP 或未收录域名不保证被此规则覆盖。
+
+添加策略组后，需在 OpenClash“配置订阅”中点击“更新配置”，再由你手动重新载入生成的配置；只刷新 MyProxy 等规则提供器不会新增策略组。之后在 Dashboard 选择 Steam 的出口，并在连接记录中确认目标命中 `GEOSITE,steam`、代理链显示 Steam。已有连接可能沿用旧出口，重新连接 Steam 后再验证。
+
 ## 导入 OpenClash
 
 ### 方式一：配置订阅自动更新（推荐）
@@ -158,7 +166,7 @@ GitHub 公开仓库中的域名列表任何人都可以查看，也可能被搜�
 
 - 四份个人规则完全由本仓库维护。
 - 大范围规则只保留一个 MetaCubeX MRS provider：`ChinaDomain`（中国域名）；另有一个 Telegram 专用 IP CIDR provider：`TelegramIP`。不加载 `ProxyLite/geolocation-!cn`，避免所有境外域名自动走代理。
-- Microsoft、Netflix、Telegram 域名、AI 和游戏使用 Mihomo 内置 `GEOSITE` 数据；Telegram IP 由 `TelegramIP` 覆盖。`GEOIP` 只用于 `private` 和 `CN`。
+- Microsoft、Netflix、YouTube、Steam、Telegram 域名、AI 和游戏使用 Mihomo 内置 `GEOSITE` 数据；Telegram IP 由 `TelegramIP` 覆盖。`GEOIP` 只用于 `private` 和 `CN`。
 - `category-ai-!cn`、`category-games@cn` 等 GEOSITE 标签依赖当前 Mihomo geodata。若所用 OpenClash/Mihomo 版本的数据集不包含某标签，需升级 geodata/核心，或删除对应规则后改用自己的 classical 规则。
 - 部分机场节点名称不含国家/地区关键词，会被地区正则漏掉；这属于节点命名兼容性问题，可按机场实际节点名调整 `filter`。
 - 如果某地区没有匹配节点，相关自动/手动组可能为空。可修改正则，或从上层策略组中暂时移除该地区组。
