@@ -15,6 +15,7 @@ custom-openclash-rules/
    ├─ my-proxy.list
    ├─ my-direct.list
    ├─ my-ai.list
+   ├─ my-dev.list
    └─ my-reject.list
 ```
 
@@ -26,6 +27,7 @@ custom-openclash-rules/
 - `rules/my-proxy.list`：交给“我的代理网站”策略组。
 - `rules/my-direct.list`：交给“我的直连网站”策略组。
 - `rules/my-ai.list`：交给“AI”策略组。
+- `rules/my-dev.list`：交给“编程开发”策略组，补充公共开发分类。
 - `rules/my-reject.list`：交给“我的拒绝网站”策略组，默认拒绝连接。
 
 ## 首次使用前替换占位符
@@ -49,7 +51,7 @@ https://raw.githubusercontent.com/alice/openclash-rules/main/rules/my-proxy.list
 
 ## 添加自定义规则
 
-四个规则文件均使用 Mihomo `classical + text` 格式，每行一条规则，不需要 `payload:`：
+五个规则文件均使用 Mihomo `classical + text` 格式，每行一条规则，不需要 `payload:`：
 
 ```text
 DOMAIN-SUFFIX,example.com
@@ -62,21 +64,36 @@ DOMAIN-KEYWORD,example
 - 需要代理：`rules/my-proxy.list`
 - 需要直连：`rules/my-direct.list`
 - AI 服务：`rules/my-ai.list`
+- 编程语言、开发文档与工具：`rules/my-dev.list`
 - 需要拒绝：`rules/my-reject.list`
 
 当前仍为空的直连和拒绝列表保留了 `DOMAIN-SUFFIX,placeholder.invalid`。这是无害的保留域名占位规则，用来避免某些旧版核心拒绝加载完全空白的规则集；添加真实规则后可以保留，也可以删除。
 
-规则按“拒绝 > 直连 > AI > 代理”的顺序匹配。同一个域名不要重复放入多个文件；如果重复，排在前面的规则生效。所有自定义规则均放在 `ChinaDomain`、`GEOIP` 和 `MATCH` 之前，防止被大范围规则提前命中。
+规则按“拒绝 > 直连 > AI > 开发 > 代理”的顺序匹配。新增域名尽量不要重复放入多个文件；如果重复，排在前面的规则生效。GitHub、npm 等少量预置开发规则在 `my-proxy.list` 保留兼容条目，供尚未更新配置的设备继续使用；新配置优先命中 `MyDev`。所有自定义规则均放在 `ChinaDomain`、`GEOIP` 和 `MATCH` 之前，防止被大范围规则提前命中。
 
 ## 公共境外数据库
 
 配置采用“默认直连、命中规则才分流”的黑名单模式：
 
-1. `rules/*.list`：你可以直接维护的高优先级规则；其中代理和 AI 列表预置了一组常用核心域名。
+1. `rules/*.list`：你可以直接维护的高优先级规则；其中代理、AI 和开发列表预置了一组常用核心域名。
 2. Mihomo GEOSITE：使用 `gfw`、`category-scholar-!cn`、`category-social-media-!cn`、`category-browser-!cn`、`category-anticensorship` 和 `category-vpnservices` 等精确分类。
-3. 中国域名和中国 IP 明确直连，最终 `MATCH/FINAL` 也是 `DIRECT`。未列入任何规则的境外网站同样直连；若需要代理，将域名加入 `my-proxy.list`。
+3. 未命中前面个人或服务分类的中国域名和中国 IP 直连，最终 `MATCH/FINAL` 也是 `DIRECT`。未列入任何规则的境外网站同样直连；若需要代理，将域名加入 `my-proxy.list`，开发站点则加入 `my-dev.list`。
 
 GEOSITE 分类主要来自 [v2fly/domain-list-community](https://github.com/v2fly/domain-list-community)，Mihomo 数据由 [MetaCubeX/meta-rules-dat](https://github.com/MetaCubeX/meta-rules-dat) 提供。没有直接引入 blackmatrix7 的完整 Global 列表，因为它规模较大，而且会让大量未明确指定的网站自动走代理；在 R2S 上使用精确分类更符合按需分流模式。
+
+## 编程开发独立策略组
+
+“编程开发”默认跟随“主代理”，可独立切换六个地区的自动组、手动节点组或 `DIRECT`。如果只是跟随相同节点，创建分类本身不会提高网速；可在此组选择不同地区/节点，对访问慢的具体站点比较效果。
+
+公共 `GEOSITE,category-dev` 覆盖 Python、Go、Rust、Java、Node.js、GitHub、包仓库、文档以及部分开发工具、软件源和建站平台，范围比“语言官网”更广。内容由已有的 Mihomo geodata 更新，无需额外引入第三方规则提供器。已标注为国内的 `category-dev@cn` 优先直连，减少这些域名及 CDN 绕路；其他需要直连的例外放到 `my-direct.list`。公共分类仍可能遗漏域名或使用过期记录，实际范围以当前 geodata 为准。
+
+`my-dev.list` 明确收录 Node.js（含子域名和下载地址）、常见语言官网、MDN、Microsoft Learn、前后端框架及构建工具；并补充 Stack Overflow、Stack Exchange、Dev.to、Hashnode、Hacker News、V2EX、FreeCodeCamp、各语言技术论坛和国际编程练习站。Python、Rust 等语言域名的子域名已包含其官方论坛。公共开发分类会继续补充此列表以外的网站；尚未收录的站点直接加到 `my-dev.list`。
+
+GitHub、npm、Stack Overflow 等规则在 `MyDev` 中优先归组，`my-proxy.list` 同时保留兼容条目，避免设备尚未更新配置时失去旧有分流。个人拒绝、直连和 AI 规则优先于开发列表；未命中个人规则的开发分类放在微软、GFW、国内和兜底规则之前，避免开发站先被这些规则接管。CSDN、博客园、掘金、SegmentFault、开源中国及力扣中国等国内站点沿用原有直连分流；如需改动可以放入相应个人列表。规则按域名匹配，无法仅根据路径识别 Reddit 的编程版块，Reddit 仍按原来的“我的代理网站”分流。
+
+首次使用此功能，需先将 `config/subconverter.ini`、`config/base.yaml`、`config/mihomo.yaml` 和规则文件一并推送，再由你在 OpenClash“配置订阅”点击“更新配置”并重新载入，确认面板中出现“编程开发”及规则提供器 `MyDev`。之后只修改 `my-dev.list` 时，推送后刷新 `MyDev` 或等待每日自动更新即可。
+
+验证时重新访问目标站，在连接记录中检查命中 `MyDev` 或 `GEOSITE,category-dev`，代理链应包含“编程开发”。若换节点仍慢，需结合具体域名排查节点链路、DNS 或目标服务器；仅凭“访问慢”无法确定是哪一项。
 
 ## Steam 独立策略组
 
@@ -107,19 +124,19 @@ Steam 使用独立的 `select` 策略组，默认选择 `DIRECT`，也可以选�
 
 首次更新配置订阅时，subconverter 会读取 `subconverter.ini` 和 `base.yaml`，生成个人规则和 Telegram IP 规则的 `RULE-SET` 引用。之后个人 `rules/*.list` 与 Telegram IP 数据由路由器上的 Mihomo 直接下载，不再依赖第三方转换服务器缓存。
 
-四个个人 Rule Provider 均设置了 `proxy: 主代理`，规则更新通过代理下载 GitHub Raw。建议关闭 OpenClash 的“GitHub 地址修改”，避免 Raw 地址被改写成可能存在旧缓存的 jsDelivr 地址；临时更新失败时，Mihomo 会继续使用已经下载到路由器的本地规则文件。
+五个个人 Rule Provider 均设置了 `proxy: 主代理`，规则更新通过代理下载 GitHub Raw。建议关闭 OpenClash 的“GitHub 地址修改”，避免 Raw 地址被改写成可能存在旧缓存的 jsDelivr 地址；临时更新失败时，Mihomo 会继续使用已经下载到路由器的本地规则文件。
 
-> 首次应用这套新模板后，应在 Dashboard 的规则提供器页面看到 `MyProxy`、`MyDirect`、`MyAI`、`MyReject` 和 `TelegramIP`。
+> 首次应用这套新模板后，应在 Dashboard 的规则提供器页面看到 `MyProxy`、`MyDirect`、`MyAI`、`MyDev`、`MyReject` 和 `TelegramIP`。
 
 ### 方式二：本地导入完整 Mihomo YAML
 
-1. 先把本仓库设为公开仓库，并确认四个 `raw.githubusercontent.com` 地址能直接打开纯文本内容。
+1. 先把本仓库设为公开仓库，并确认五个个人规则的 `raw.githubusercontent.com` 地址能直接打开纯文本内容。
 2. 下载 `config/mihomo.yaml`，替换 GitHub 用户名、仓库名。
 3. 在这份本地副本中替换 `YOUR_SUBSCRIPTION_URL`，不要把替换后的文件重新提交到公开仓库。
 4. 在 OpenClash 的“配置文件订阅/配置文件管理”页面上传本地 YAML；不同 OpenClash 版本菜单名称可能略有差异。
 5. 也可以通过 SSH 把文件放到 `/etc/openclash/config/mihomo.yaml`，然后在 OpenClash 中选择并启用该配置。
 6. 运行模式选择规则模式，核心选择 Mihomo/Meta 内核，保存并启动 OpenClash。
-7. 首次启动后检查“代理集”和“规则集”页面，确认机场订阅和六个远程规则提供器都已成功加载。
+7. 首次启动后检查“代理集”和“规则集”页面，确认机场订阅和七个远程规则提供器都已成功加载。
 
 OpenClash 可能接管或改写端口、DNS、控制器地址及 provider 本地路径；最终生效内容应以 OpenClash 运行时配置为准。
 
@@ -138,7 +155,7 @@ OpenClash 可能接管或改写端口、DNS、控制器地址及 provider 本地
 
 - 在 OpenClash Dashboard 的 Connections/连接页面查看目标域名、命中的规则和最终策略组。
 - 把 OpenClash 日志级别临时调为 `debug`，访问目标网站后搜索域名、`RULE-SET` 名称或策略组名称。
-- 在 Rules/规则提供器页面确认 `MyProxy`、`MyDirect`、`MyAI`、`MyReject`、`TelegramIP` 已加载，更新时间和规则数量符合预期。
+- 在 Rules/规则提供器页面确认 `MyProxy`、`MyDirect`、`MyAI`、`MyDev`、`MyReject`、`TelegramIP` 已加载，更新时间和规则数量符合预期。
 - 可通过 SSH 检查生成配置是否包含 provider 和引用：`grep -nE 'MyProxy|TelegramIP|RULE-SET' /etc/openclash/config/my.yaml /etc/openclash/my.yaml 2>/dev/null`。
 - 可检查本地缓存是否含目标域名：`grep -R -n "example.com" /etc/openclash/rule_provider 2>/dev/null`。
 - 测试结束后把日志级别改回 `info`，减少 R2S 的日志和存储开销。
@@ -164,10 +181,10 @@ GitHub 公开仓库中的域名列表任何人都可以查看，也可能被搜�
 
 ## 依赖与兼容性说明
 
-- 四份个人规则完全由本仓库维护。
+- 五份个人规则完全由本仓库维护。
 - 大范围规则只保留一个 MetaCubeX MRS provider：`ChinaDomain`（中国域名）；另有一个 Telegram 专用 IP CIDR provider：`TelegramIP`。不加载 `ProxyLite/geolocation-!cn`，避免所有境外域名自动走代理。
-- Microsoft、Netflix、YouTube、Steam、Telegram 域名、AI 和游戏使用 Mihomo 内置 `GEOSITE` 数据；Telegram IP 由 `TelegramIP` 覆盖。`GEOIP` 只用于 `private` 和 `CN`。
-- `category-ai-!cn`、`category-games@cn` 等 GEOSITE 标签依赖当前 Mihomo geodata。若所用 OpenClash/Mihomo 版本的数据集不包含某标签，需升级 geodata/核心，或删除对应规则后改用自己的 classical 规则。
+- Microsoft、Netflix、YouTube、Steam、Telegram 域名、AI、编程开发和游戏使用 Mihomo 内置 `GEOSITE` 数据；Telegram IP 由 `TelegramIP` 覆盖。`GEOIP` 只用于 `private` 和 `CN`。
+- `category-dev`、`category-dev@cn`、`category-ai-!cn`、`category-games@cn` 等 GEOSITE 标签依赖当前 Mihomo geodata。若所用 OpenClash/Mihomo 版本的数据集不包含某标签，需升级 geodata/核心，或删除对应规则后改用自己的 classical 规则。
 - 部分机场节点名称不含国家/地区关键词，会被地区正则漏掉；这属于节点命名兼容性问题，可按机场实际节点名调整 `filter`。
 - 如果某地区没有匹配节点，相关自动/手动组可能为空。可修改正则，或从上层策略组中暂时移除该地区组。
 - DNS、TProxy、redir-port 是否由 OpenClash 接管取决于插件版本及覆写设置。R2S 上应以 OpenClash 生成的运行时配置和启动日志为准。
@@ -186,6 +203,7 @@ config/subconverter.ini
 rules/my-proxy.list
 rules/my-direct.list
 rules/my-ai.list
+rules/my-dev.list
 rules/my-reject.list
 ```
 
@@ -199,6 +217,6 @@ git commit -m "Add maintainable OpenClash rules"
 git push origin main
 ```
 
-如果选择把本目录原样放进另一个仓库的 `custom-openclash-rules/` 子目录，四个 provider URL 必须相应改成 `.../main/custom-openclash-rules/rules/文件名`；否则 GitHub 会返回 404。为了保持模板中约定的统一 URL，推荐把本目录内容作为仓库根目录发布。
+如果选择把本目录原样放进另一个仓库的 `custom-openclash-rules/` 子目录，五个个人 provider URL 必须相应改成 `.../main/custom-openclash-rules/rules/文件名`；否则 GitHub 会返回 404。为了保持模板中约定的统一 URL，推荐把本目录内容作为仓库根目录发布。
 
 执行 `git diff --cached` 时再次搜索 `YOUR_SUBSCRIPTION_URL` 的替换位置，确认没有意外提交真实链接。

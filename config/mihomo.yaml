@@ -89,6 +89,24 @@ proxy-groups:
       - 日本手动
       - 主代理
 
+  - name: 编程开发
+    type: select
+    proxies:
+      - 主代理
+      - 香港自动
+      - 台湾自动
+      - 日本自动
+      - 韩国自动
+      - 新加坡自动
+      - 美国自动
+      - 香港手动
+      - 台湾手动
+      - 日本手动
+      - 韩国手动
+      - 新加坡手动
+      - 美国手动
+      - DIRECT
+
   - name: 微软
     type: select
     proxies:
@@ -310,6 +328,15 @@ rule-providers:
     path: ./rule_provider/MyAI.list
     interval: 86400
 
+  MyDev:
+    type: http
+    behavior: classical
+    format: text
+    url: "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_GITHUB_REPOSITORY/main/rules/my-dev.list"
+    proxy: 主代理
+    path: ./rule_provider/MyDev.list
+    interval: 86400
+
   MyReject:
     type: http
     behavior: classical
@@ -338,11 +365,12 @@ rule-providers:
     interval: 86400
 
 rules:
-  # 私有规则优先：拒绝 > 直连 > AI > 代理。
+  # 私有规则优先：拒绝 > 直连 > AI > 开发 > 代理。
   # 必须位于 ChinaDomain、GEOIP 和 MATCH 之前。
   - RULE-SET,MyReject,我的拒绝网站
   - RULE-SET,MyDirect,我的直连网站
   - RULE-SET,MyAI,AI
+  - RULE-SET,MyDev,编程开发
   - RULE-SET,MyProxy,我的代理网站
 
   # 内置 geosite 服务规则；不使用 GEOIP,Netflix/GitHub 等服务名。
@@ -350,6 +378,9 @@ rules:
   # Steam 优先于微软、国内游戏和通用游戏分类，包含商店、社区和已收录的下载域名。
   - GEOSITE,steam,Steam
   - GEOSITE,category-ai-!cn,AI
+  # 已标注的国内开发域名/CDN 直连；开发分类需在微软等大类之前。
+  - GEOSITE,category-dev@cn,DIRECT
+  - GEOSITE,category-dev,编程开发
   - GEOSITE,microsoft,微软
   - GEOSITE,netflix,Netflix
   - GEOSITE,telegram,Telegram

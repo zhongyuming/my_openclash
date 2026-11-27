@@ -7,7 +7,8 @@
 # DOMAIN,login.example.com
 # DOMAIN-KEYWORD,example
 
-# GitHub 与开发协作
+# GitHub 与开发协作：保留以兼容尚未更新的旧配置。
+# 新配置会先匹配 my-dev.list，交给“编程开发”策略组。
 DOMAIN-SUFFIX,github.com
 DOMAIN-SUFFIX,github.dev
 DOMAIN-SUFFIX,github.io
@@ -19,7 +20,6 @@ DOMAIN-SUFFIX,npmjs.com
 DOMAIN-SUFFIX,npmjs.org
 DOMAIN-SUFFIX,stackoverflow.com
 DOMAIN-SUFFIX,stackexchange.com
-
 
 # Wikimedia、社区与内容平台
 DOMAIN-SUFFIX,wikipedia.org

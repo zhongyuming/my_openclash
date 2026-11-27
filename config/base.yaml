@@ -72,6 +72,15 @@ rule-providers:
     path: ./rule_provider/MyAI.list
     interval: 86400
 
+  MyDev:
+    type: http
+    behavior: classical
+    format: text
+    url: "https://raw.githubusercontent.com/zhongyuming/my_openclash/main/rules/my-dev.list"
+    proxy: 主代理
+    path: ./rule_provider/MyDev.list
+    interval: 86400
+
   MyReject:
     type: http
     behavior: classical
